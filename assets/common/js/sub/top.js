@@ -11,46 +11,35 @@
 	var views = APP.views;
 
 	/**
-	 * 初期処理
-	 */
-	var pageInit = function() {
-
-		/* トップ */
-		var pageView = new PageView();
-		pageView.init('#PageView');
-
-	};
-
-	/**
-	 * トップ
+	 * ページ
 	 */
 	var PageView = (function() {
-		var constructor = function() {
+		var constructor = function(el) {
 			return this;
 		};
 		var proto = constructor.prototype = new views.PageView();
-		proto.render = function() {
-			views.PageView.prototype.render.apply(this);
+		proto.setChildViewInstance = function() {
+			views.PageView.prototype.setChildViewInstance.apply(this);
 
-			/* コンテンツ1 */
-			var contents1View = new SectionView();
-			contents1View.init('#contents1');
+			/* プロフィール */
+			var profileView = new ProfileView();
+			profileView.init('#profile');
 
-			/* コンテンツ2 */
-			var contents2View = new SectionView();
-			contents2View.init('#contents2');
+			/* コンセプト */
+			var conceptView = new SectionView();
+			conceptView.init('#concept');
 
-			/* コンテンツ3 */
-			var contents3View = new SectionView();
-			contents3View.init('#contents3');
+			/* ギャラリー */
+			var galleryView = new SectionView();
+			galleryView.init('#gallery');
 
-			/* コンテンツ4 */
-			var contents4View = new SectionView();
-			contents4View.init('#contents4');
+			/* ブログ */
+			var blogView = new SectionView();
+			blogView.init('#blog');
 
-			/* コンテンツ5 */
-			var contents5View = new SectionView();
-			contents5View.init('#contents5');
+			/* お問い合わせ */
+			var contactView = new SectionView();
+			contactView.init('#contact');
 
 			return this;
 		};
@@ -63,54 +52,51 @@
 	var SectionView = (function() {
 		var constructor = function() {
 			this.$el = {};
-			this.$child = {};
-			this.sectionIndex = 0;
-			this.scrollAdjust = 0;
-			this.fadeSpeed = 1500;
-			this.isScroll = false;
-			this.isShow = false;
 			return this;
 		};
 		var proto = constructor.prototype;
 		proto.init = function(el) {
 			this.setEl(el);
-			this.render();
+			this.onLoadFunction();
 			this.setEvents();
 			return this;
 		};
 		proto.setEl = function(el) {
 			this.$el = $(el);
-			this.$child = this.$el.children();
 			return this;
 		};
-		proto.render = function() {
-			this.sectionIndex = this.$el.index();
-			this.scrollAdjust = $(window).height()/2;
-			this.$child.hide();
+		proto.onLoadFunction = function() {
+
 			return this;
 		};
 		proto.setEvents = function() {
-			var that = this;
-			$(window).scroll(function() {
-				if(!that.isShow && !that.isScroll) {
-					that.showChild($(window).scrollTop());
-					that.isScroll = false;
-				}
-			});
-			return this;
-		};
-		proto.showChild = function(scrollTop) {
-			this.isScroll = true;
-			if(scrollTop > global.contentsOffsetArray[this.sectionIndex + 1] - this.scrollAdjust) {
-				this.$child.fadeIn(this.fadeSpeed);
-				this.isShow = true;
-			}
+
 			return this;
 		};
 		return constructor;
 	})();
 
-	/* 初期処理 */
-	pageInit();
+	/**
+	 * プロフィール
+	 */
+	var ProfileView = (function() {
+		var constructor = function() {
+			return this;
+		};
+		var proto = constructor.prototype = new SectionView();
+		proto.onLoadFunction = function() {
+
+			/* 切り替えコンテンツ */
+			new ui.switchContents('.js-switchContents');
+
+			SectionView.prototype.onLoadFunction.apply(this);
+			return this;
+		};
+		return constructor;
+	})();
+
+	/* ページ */
+	var pageView = new PageView();
+	pageView.init('#PageView');
 
 })();

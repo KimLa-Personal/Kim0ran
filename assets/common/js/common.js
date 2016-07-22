@@ -23,9 +23,6 @@
 
 	App.global = {
 
-		navOffsetTop: 0,  // グロナビの初期位置
-		contentsOffsetArray: []  // 各セクションの縦位置
-
 	};
 
 
@@ -45,69 +42,240 @@
 		/**
 		 * プリローダー
 		 */
-		preloader: function() {
-			var $el = {};
-			var $loadbar = {};
-			var loadbarSpeed = 1500;
-			var fadeSpeed = 500;
-			var callback = null;
-			var isLoading = false;
-			var init = function(args) {
-				callback = args.callback || null;
-				setEl(args.el);
-				render();
-				setEvents();
+		preloader: (function() {
+			var constructor = function(args) {
+				this.$el = {};
+				this.$loadber = {};
+				this.callback = {};
+				this.loadberSpeed = 500;
+				this.fadeSpeed = 500;
+				this.isLoading = false;
+				this.init(args);
 				return this;
 			};
-			var setEl = function(el) {
-				$el = $(el);
-				$loadbar = $el.find('.js-loadbar');
+			var proto = constructor.prototype;
+			proto.init = function(args) {
+				this.callback = args.callback || null;
+				this.setEl(args.el);
+				this.onLoadFunction();
+				this.setEvents();
 				return this;
 			};
-			var render = function() {
-				isLoading = true;
-				$el.show();
-				$loadbar.width(0);
-				pageLoad();
+			proto.setEl = function(el) {
+				this.$el = $(el);
+				this.$loadber = this.$el.find('.js-loadbar');
 				return this;
 			};
-			var pageLoad = function() {
-				$loadbar.animate({
-					width: '30%'
-				});
+			proto.onLoadFunction = function() {
+				this.isLoading = true;
+				this.$el.show();
+				this.$loadber.css({ width: 0 });
+				this.pageLoad();
+				return this;
+			};
+			proto.pageLoad = function() {
+				var that = this;
+				this.$loadber.animate({ width: '30%' });
 				$(window).load(function() {
-					$loadbar.animate({
+					that.$loadber.animate({
 						width: '100%'
-					}, loadbarSpeed, function() {
-						onAfterLoad();
+					}, that.loadberSpeed, function() {
+						that.onLoad();
 					});
 				});
 				return this;
 			};
-			var onAfterLoad = function() {
-				$el.fadeOut(fadeSpeed, function() {
-					if(callback !== null) {
-						callback();
+			proto.onLoad = function() {
+				var that = this;
+				this.$el.fadeOut(this.fadeSpeed, function() {
+					if(that.callback !== null) {
+						that.callback();
 					}
-					isLoading = false;
+					that.isLoading = false;
 				});
 				return this;
 			};
-			var setEvents = function() {
+			proto.setEvents = function() {
+				var that = this;
 				$(window).on('scroll', function(e) {
-					if(isLoading) {
+					if(that.isLoading) {
 						e.preventDefault();
-						onScrollHidden();
+						that.onScroll();
 					}
 				});
 				return this;
 			};
-			var onScrollHidden = function() {
+			proto.onScroll = function() {
 				$(window).scrollTop(0);
 				return this;
 			};
-			return { init: init };
-		}
+			return constructor;
+		})(),
+
+		/**
+		 * モーダル
+		 */
+		modal: (function() {
+			var constructor = function(args) {
+				this.$el = {};
+				this.$clone = {};
+				this.$modal = {};
+				this.$modalBtnOpen = {};
+				this.$modalBtnClose = {};
+				this.$modalMain = {};
+				this.fadeSpeed = 500;
+				this.isOpen = true;
+				this.isAnimate = false;
+				this.init(args);
+				return this;
+			};
+			var proto = constructor.prototype;
+			proto.init = function(args) {
+				this.setEl(args.el);
+				this.render();
+				return this;
+			};
+			proto.setEl = function(el) {
+				this.$el = $(el);
+				this.$modalBtnOpen = this.$el.find('.js-modalBtnOpen');
+				this.$clone = this.$el.find('.js-modalClone');
+				return this;
+			};
+			proto.render = function() {
+				var that = this;
+				var tmpl = [];
+				tmpl.push('<div class="modal js-modal">');
+				tmpl.push('  <div class="modal-inner">');
+				tmpl.push('    <div class="modal-btnClose js-modalBtnClose">閉じる</div>');
+				tmpl.push('    <div class="modal-main js-modalMain"></div>');
+				tmpl.push('  </div>');
+				tmpl.push('</div>');
+				$('body').append(tmpl.join('')).promise().done(function() {
+					that.onRender();
+				});
+				return this;
+			};
+			proto.onRender = function() {
+				this.onRenderSetEl();
+				this.setClone();
+				return this;
+			};
+			proto.onRenderSetEl = function() {
+				this.$modal = $('.js-modal');
+				this.$modalBtnClose = this.$modal.find('.js-modalBtnClose');
+				this.$modalMain = this.$modal.find('.js-modalMain');
+				return this;
+			};
+			proto.setClone = function() {
+				var that = this;
+				this.$modalMain.append(this.$clone.clone()).promise().done(function() {
+					that.open();
+					that.isAnimate = false;
+					that.isOpen = true;
+				});
+				return this;
+			};
+			proto.setEvents = function() {
+				var that = this;
+				this.$btnClose.off('click').on('click', function() {
+					if(that.isOpen) {
+						that.close();
+						that.isAnimate = false;
+						that.isOpen = false;
+					}
+				});
+				return this;
+			};
+			proto.open = function() {
+				var that = this;
+				this.isAnimate = true;
+				this.$modal.fadeIn(this.fadeSpeed);
+				return this;
+			};
+			proto.close = function() {
+				var that = this;
+				this.isAnimate = true;
+				this.$modal.fadeOut(this.fadeSpeed, function() {
+					that.$modal.remove();
+				});
+				return this;
+			};
+			return constructor;
+		})(),
+
+		/**
+		 * 切り替えコンテンツ
+		 */
+		switchContents: (function() {
+			var constructor = function(el) {
+				this.$el = {};
+				this.$nav = {};
+				this.$navChild = {};
+				this.$contents = {};
+				this.isShowNum = 0;
+				this.fadeSpeed = 500;
+				this.isAnimate = false;
+				this.init(el);
+				return this;
+			};
+			var proto = constructor.prototype;
+			proto.init = function(el) {
+				this.setEl(el);
+				this.onLoadFunction();
+				this.setEvents();
+				return this;
+			};
+			proto.setEl = function(el) {
+				this.$el = $(el);
+				this.$nav = this.$el.find('.js-switchContentsNav');
+				this.$navChild = this.$nav.children();
+				this.$contents = this.$el.find('.js-switchContentsMain');
+				return this;
+			};
+			proto.onLoadFunction = function() {
+
+				/* 子要素の高さを合わせる */
+				var contentsList = App.utils.matchHeight();
+				contentsList.init('.js-matchHeight');
+
+				this.$contents.hide();
+				this.$navChild.eq(this.isShowNum).addClass('active');
+				this.$contents.eq(this.isShowNum).show();
+				return this;
+			};
+			proto.setEvents = function() {
+				var that = this;
+				this.$navChild.off('click').on('click', function() {
+					if(!that.isAnimate) {
+						that.onClickNav(this);
+						that.isAnimate = false;
+					}
+				});
+				return this;
+			};
+			proto.onClickNav = function(that) {
+				this.isAnimate = true;
+				this.hideContents();
+				this.isShowNum = $(that).index();
+				this.showContents();
+				return this;
+			};
+			proto.showContents = function() {
+				var that = this;
+				this.$contents.eq(this.isShowNum).fadeIn(this.fadeSpeed, function() {
+					that.$navChild.eq(that.isShowNum).addClass('active');
+				});
+				return this;
+			};
+			proto.hideContents = function() {
+				var that = this;
+				this.$contents.eq(this.isShowNum).fadeOut(this.fadeSpeed, function() {
+					that.$nav.find('.active').removeClass('active');
+				});
+				return this;
+			};
+			return constructor;
+		})()
 
 	};
 
@@ -116,6 +284,44 @@
 ------------------------------------------------------------*/
 
 	App.utils = {
+
+		/**
+		 * 子要素の高さを合わせる
+		 */
+		matchHeight: function() {
+			var $el = {};
+			var $child = {};
+			var maxHeight = 0;
+			var init = function(el) {
+				setEl(el);
+				getHeight();
+				setHeight();
+				return this;
+			};
+			var setEl = function(el) {
+				$el = $(el);
+				$child = $el.children();
+				return this;
+			};
+			var getHeight = function() {
+				var array = [];
+				$child.each(function() {
+					array.push($(this).outerHeight());
+				});
+				array.sort(function(a, b) {
+					if(a > b) return -1;
+					if(a < b) return 1;
+					return 0;
+				});
+				maxHeight = array[0];
+				return this;
+			};
+			var setHeight = function() {
+				$el.css({ height: maxHeight });
+				return this;
+			};
+			return { init: init };
+		}
 
 	};
 
@@ -129,76 +335,84 @@
 		 * ページ
 		 */
 		PageView: (function() {
-			var constructor = function() {
+			var constructor = function(el) {
 				this.$el = {};
 				this.$anchor = {};
-				this.$imgBtn = {};
-				this.isScroll = false;
+				this.$btn = {};
+				this.$section = {};
+				this.sectionOffsetTopArray = [];
+				this.headerView = {};
+				this.footerView = {};
 				this.isResize = false;
+				this.isScroll = false;
 				this.scrollSpeed = 500;
 				return this;
 			};
 			var proto = constructor.prototype;
 			proto.init = function(el) {
 				this.setEl(el);
-				this.onBeforeRender();
-				this.render();
+				this.onLoadFunction();
+				this.setChildViewInstance();
 				this.setEvents();
 				return this;
 			};
 			proto.setEl = function(el) {
 				this.$el = $(el);
 				this.$anchor = this.$el.find('a[href^="#"]');
-				this.$imgBtn = this.$el.find('.btn');
+				this.$imgBtn = this.$el.find('img.btn');
+				this.$section = this.$el.find('.section');
 				return this;
 			};
-			proto.onBeforeRender = function() {
+			proto.onLoadFunction = function() {
 
 				/* プリローダー */
-				var preloader = App.ui.preloader();
-				preloader.init({
-					el: '.js-loader'
-				});
+				new App.ui.preloader({ el: '.js-loader' });
 
+				this.getSectionOffsetArray();
 				return this;
 			};
-			proto.render = function() {
-
-				/* メイン */
-				var mainView = new App.views.MainView();
-				mainView.init({
-					el: '#MainView',
-					scrollAdjust: 100
+			proto.getSectionOffsetArray = function() {
+				var that = this;
+				this.sectionOffsetTopArray.push(0);
+				this.$section.each(function() {
+					that.sectionOffsetTopArray.push($(this).offset().top);
 				});
+				this.sectionOffsetTopArray.push(this.sectionOffsetTopArray[this.sectionOffsetTopArray.length-1] + this.$section.last().outerHeight());
+				return this;
+			};
+			proto.setChildViewInstance = function() {
 
 				/* ヘッダ */
-				var headerView = new App.views.HeaderView();
-				headerView.init({
-					el: '#HeaderView'
+				this.headerView = new App.views.HeaderView();
+				this.headerView.init({
+					el: '#HeaderView',
+					sectionOffsetTopArray: this.sectionOffsetTopArray
 				});
 
 				/* フッタ */
-				var footerView = new App.views.FooterView();
-				footerView.init({
-					el: '#FooterView'
-				});
+				this.footerView = new App.views.FooterView();
+				this.footerView.init('#FooterView');
 
 				return this;
 			};
 			proto.setEvents = function() {
 				var that = this;
 				$(window).resize(function() {
-					if(!this.isResize) {
-						that.onResizeRender();
-						that.isResize = false;
+					that.onResize();
+					that.isResize = false;
+				});
+				$(window).scroll(function() {
+					if(!that.isScroll) {
+						that.onScroll($(window).scrollTop());
+						that.isScroll = false;
 					}
 				});
-				this.$anchor.off('click').on('click', function() {
+				this.$anchor.off('click').on('click', function(e) {
+					e.preventDefault();
 					if(!that.isScroll) {
 						that.smoothScroll($(this).attr('href'));
 						that.isScroll = false;
 					}
-					return false;
 				});
 				this.$imgBtn.hover(function() {
 					that.imageRollover(this);
@@ -207,9 +421,14 @@
 				});
 				return this;
 			};
-			proto.onResizeRender = function() {
+			proto.onResize = function() {
 				this.isResize = true;
-				this.render();
+				return this;
+			};
+			proto.onScroll = function(scrollTop) {
+				this.isScroll = true;
+				this.headerView.onScroll(scrollTop);
+				this.footerView.onScroll(scrollTop);
 				return this;
 			};
 			proto.smoothScroll = function(href) {
@@ -222,11 +441,11 @@
 				return this;
 			};
 			proto.imageRollover = function(that) {
-				var $that = $(that);
-				var imgSrc = $that.attr('src');
+				var $image = $(that);
+				var imgSrc = $image.attr('src');
 				var imgPath = imgSrc.split('/');
 				var imgFile = imgPath[imgPath.length -1];
-				$that.attr('src', (imgFile.indexOf('_on') == -1) ? imgSrc.replace(/(\.)(gif|jpg|png)/i, '_on$1$2') : imgSrc.replace(/(\_on)(.)(gif|jpg|png)/i, '$2$3'));
+				$image.attr('src', (imgFile.indexOf('_on') == -1) ? imgSrc.replace(/(\.)(gif|jpg|png)/i, '_on$1$2') : imgSrc.replace(/(\_on)(.)(gif|jpg|png)/i, '$2$3'));
 				return this;
 			};
 			return constructor;
@@ -238,157 +457,64 @@
 		HeaderView: (function() {
 			var constructor = function() {
 				this.$el = {};
-				return this;
-			};
-			var proto = constructor.prototype;
-			proto.init = function(args) {
-				this.setEl(args.el);
-				this.render();
-				this.setEvents();
-				return this;
-			};
-			proto.setEl = function(el) {
-				this.$el = $(el);
-				this.$nav = this.$el.find('.js-globalNav');
-				return this;
-			};
-			proto.render = function() {
-				this.adjustViewHeight();
-
-				/* グローバルナビ */
-				var globalNavView = new App.views.GlobalNavView();
-				globalNavView.init({
-					el: '#GlobalNavView'
-				});
-
-				return this;
-			};
-			proto.adjustViewHeight = function() {
-				var navHeight = this.$nav.outerHeight();
-				App.global.navOffsetTop = $(window).height() - navHeight;
-				this.$el.css({
-					height: App.global.navOffsetTop,
-					paddingBottom: navHeight
-				});
-				return this;
-			};
-			proto.setEvents = function() {
-				return this;
-			};
-			return constructor;
-		})(),
-
-		/**
-		 * グローバルナビ
-		 */
-		GlobalNavView: (function() {
-			var constructor = function() {
-				this.$el = {};
 				this.$nav = {};
-				this.$child = {};
-				this.currentNum = 0;
+				this.$navBtn = {};
+				this.sectionOffsetTopArray = [];
+				this.navCurrentNum = 0;
+				this.navOffsetTop = 0;
 				this.isScroll = false;
 				return this;
 			};
 			var proto = constructor.prototype;
 			proto.init = function(args) {
+				this.sectionOffsetTopArray = args.sectionOffsetTopArray;
 				this.setEl(args.el);
-				this.render();
-				this.setEvents();
+				this.onLoadFunction();
 				return this;
 			};
 			proto.setEl = function(el) {
 				this.$el = $(el);
-				this.$nav = this.$el.find('ul');
-				this.$child = this.$nav.children();
+				this.$nav = this.$el.find('.js-globalNav');
+				this.$navBtn = this.$nav.find('li');
 				return this;
 			};
-			proto.render = function() {
-				return this;
-			};
-			proto.setEvents = function() {
-				var that = this;
-				$(window).scroll(function() {
-					if(!that.isScroll) {
-						that.onScrollRender($(window).scrollTop());
-						that.isScroll = false;
-					}
+			proto.onLoadFunction = function() {
+				var navHeight = this.$nav.outerHeight();
+				this.navOffsetTop = $(window).height() - navHeight;
+				this.$el.css({
+					height: $(window).height() - navHeight,
+					paddingBottom: navHeight
 				});
 				return this;
 			};
-			proto.onScrollRender = function(scrollTop) {
-				this.isScroll = true;
-				this.getContentNum(scrollTop);
-				this.setStylePosition(scrollTop);
+			proto.onScroll = function(scrollTop) {
+				this.getSectionNum(scrollTop);
+				this.setStyleNavFixed(scrollTop);
 				this.setCurrentClass();
 				return this;
 			};
-			proto.getContentNum = function(scrollTop) {
-				for(var i=0; i<App.global.contentsOffsetArray.length; i++) {
-					if(scrollTop > App.global.contentsOffsetArray[i] && scrollTop < App.global.contentsOffsetArray[i+1]) {
-						this.currentNum = i;
+			proto.getSectionNum = function(scrollTop) {
+				for(var i=0; i<this.sectionOffsetTopArray.length; i++) {
+					if(scrollTop > this.sectionOffsetTopArray[i] && scrollTop < this.sectionOffsetTopArray[i+1]) {
+						this.navCurrentNum = i;
 						break;
 					}
 				}
 				return this;
 			};
 			proto.setCurrentClass = function() {
-				this.$child.removeClass('current');
-				if(this.currentNum > 0) {
-					this.$child.eq(this.currentNum-1).addClass('current');
+				this.$nav.find('.current').removeClass('current');
+				if(this.navCurrentNum > 0) {
+					this.$navBtn.eq(this.navCurrentNum-1).addClass('current');
 				}
 				return this;
 			};
-			proto.setStylePosition = function(scrollTop) {
-				if(scrollTop > App.global.navOffsetTop) {
-					this.$el.addClass('fixed');
+			proto.setStyleNavFixed = function(scrollTop) {
+				if(scrollTop > this.navOffsetTop) {
+					this.$nav.addClass('fixed');
 				} else {
-					this.$el.removeClass('fixed');
+					this.$nav.removeClass('fixed');
 				}
-				return this;
-			};
-			return constructor;
-		})(),
-
-		/**
-		 * メイン
-		 */
-		MainView: (function() {
-			var constructor = function() {
-				this.$el = {};
-				this.$section = {};
-				this.scrollAdjust = 0;
-				return this;
-			};
-			var proto = constructor.prototype;
-			proto.init = function(args) {
-				this.scrollAdjust = args.scrollAdjust;
-				this.setEl(args.el);
-				this.render();
-				this.setEvents();
-				return this;
-			};
-			proto.setEl = function(el) {
-				this.$el = $(el);
-				this.$section = this.$el.find('.section');
-				return this;
-			};
-			proto.render = function() {
-				this.getContentsOffsetArray();
-				return this;
-			};
-			proto.getContentsOffsetArray = function() {
-				var that = this;
-				var offsetArray = [];
-				offsetArray.push(0);
-				this.$section.each(function() {
-					offsetArray.push($(this).offset().top - that.scrollAdjust);
-				});
-				offsetArray.push(offsetArray[offsetArray.length-1]+this.$el.outerHeight());
-				App.global.contentsOffsetArray = offsetArray;
-				return this;
-			};
-			proto.setEvents = function() {
 				return this;
 			};
 			return constructor;
@@ -401,14 +527,12 @@
 			var constructor = function() {
 				this.$el = {};
 				this.$btnPagetop = {};
-				this.isScroll = false;
 				return this;
 			};
 			var proto = constructor.prototype;
-			proto.init = function(args) {
-				this.setEl(args.el);
-				this.render();
-				this.setEvents();
+			proto.init = function(el) {
+				this.setEl(el);
+				this.onLoadFunction();
 				return this;
 			};
 			proto.setEl = function(el) {
@@ -416,22 +540,11 @@
 				this.$btnPagetop = this.$el.find('.js-btnPagetop');
 				return this;
 			};
-			proto.render = function() {
+			proto.onLoadFunction = function() {
 				this.$btnPagetop.hide();
 				return this;
 			};
-			proto.setEvents = function() {
-				var that = this;
-				$(window).scroll(function() {
-					if(!that.isScroll) {
-						that.onScrollRender($(window).scrollTop());
-						that.isScroll = false;
-					}
-				});
-				return this;
-			};
-			proto.onScrollRender = function(scrollTop) {
-				this.isScroll = true;
+			proto.onScroll = function(scrollTop) {
 				if(scrollTop > $(window).height()*1.5) {
 					this.$btnPagetop.fadeIn();
 				} else {

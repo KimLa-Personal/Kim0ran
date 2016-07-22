@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>★タイトル★</title>
+<title>きもらんドットコム</title>
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 <meta name="description" content="★概要★">
 <meta name="keywords" content="★キーワード★">
@@ -22,15 +23,15 @@
 <div class="page" id="PageView">
 
 	<header class="header" id="HeaderView">
-		<h1>TITLE</h1>
+		<h1>きもらん</h1>
 		<nav class="globalNav js-globalNav" id="GlobalNavView">
 			<div class="inner">
 				<ul>
-					<li><a href="#contents1">コンテンツ1</a></li>
-					<li><a href="#contents2">コンテンツ2</a></li>
-					<li><a href="#contents3">コンテンツ3</a></li>
-					<li><a href="#contents4">コンテンツ4</a></li>
-					<li><a href="#contents5">コンテンツ5</a></li>
+					<li><a href="#profile">プロフィール</a></li>
+					<li><a href="#concept">コンセプト</a></li>
+					<li><a href="#gallery">ギャラリー</a></li>
+					<li><a href="#blog">ブログ</a></li>
+					<li><a href="#contact">お問い合わせ</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -38,38 +39,92 @@
 
 	<main class="main" id="MainView">
 
-		<section class="section" id="contents1">
+		<section class="section" id="profile">
 			<div class="inner">
-				<h2>Contents1</h2>
+				<h2>きもらん</h2>
+				<figure class="profile-figure"><img src="./common/img/profile_img.png"></figure>
+				<p class="profile-notes">
+					メインはフロントエンドエンジニア<br>
+					ディレクション、ビジュアルデザインの経験もあるユーティリティプレイヤー<br>
+					わかりやすく言うと、Webデザイナー<br>
+					元グラフィックデザイナー兼イラストレーター<br>
+					Excelが大好き
+				</p>
+				<div class="profile-detail js-switchContents">
+					<ul class="profile-detail-btn js-switchContentsNav">
+						<li data-view="">仕事</li>
+						<li data-view="">個人</li>
+						<li data-view="">その他</li>
+					</ul>
+					<div class="profile-detail-contents js-matchHeight">
+						<dl class="profile-detail-contents-list js-switchContentsMain">
+							<dt>Jobs</dt>
+							<dd>フロントエンドエンジニア</dd>
+							<dt>Skill</dt>
+							<dd>
+								<ul>
+									<li>(X)HTML<small>（HTML4〜5、XHTML1.01）</small></li>
+									<li>CSS<small>（Level1〜3）</small></li>
+									<li>JavaScript<small>（jQuery、Backbone、Marionette、underscore）</small></li>
+									<li>ビルドツール<small>（Grunt、gulp）</small></li>
+								</ul>
+							</dd>
+							<dt>Software</dt>
+							<dd>
+								<ul>
+									<li>Adobe Photoshop</li>
+									<li>Adobe Illustrator</li>
+									<li>Microsoft Excel</li>
+								</ul>
+							</dd>
+						</dl>
+						<dl class="profile-detail-contents-list js-switchContentsMain">
+							<dt>Hobby</dt>
+							<dd>DRAGON BALL、パワプロ</dd>
+						</dl>
+						<dl class="profile-detail-contents-list js-switchContentsMain">
+							<dt>その他</dt>
+							<dd>ふふっふ</dd>
+						</dl>
+					</div>
+				</div><!--/.profile-detail -->
+			</div>
+		</section>
+
+		<section class="section" id="concept">
+			<div class="inner">
+				<h2>be my self</h2>
 				<p>さんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入る</p>
 			</div>
 		</section>
 
-		<section class="section" id="contents2">
+		<section class="section" id="gallery">
 			<div class="inner">
-				<h2>Contents2</h2>
+				<h2>ギャラリー</h2>
 				<p>さんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入る</p>
 			</div>
 		</section>
 
-		<section class="section" id="contents3">
+		<section class="section" id="blog">
 			<div class="inner">
-				<h2>Contents3</h2>
+				<h2>ブログ</h2>
 				<p>さんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入る</p>
 			</div>
 		</section>
 
-		<section class="section" id="contents4">
+		<section class="section" id="contact">
 			<div class="inner">
-				<h2>Contents4</h2>
-				<p>さんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入る</p>
-			</div>
-		</section>
-
-		<section class="section" id="contents5">
-			<div class="inner">
-				<h2>Contents5</h2>
-				<p>さんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入るさんぷるテキスト入る</p>
+				<h2>お問い合わせ</h2>
+				<p>ご意見やご感想、その他お問い合わせにつきましては以下のフォームにてお願い致します</p>
+				<p class="contact-notes">現在、お仕事の依頼は承っておりません</p>
+				<div class="contact-form">
+					<ul class="contact-form-list">
+						<li><input type="text" name="name" maxlength="100" size="60" value="" placeholder="お名前"></li>
+						<li><input type="text" name="mail" maxlength="100" size="60" value="" placeholder="メールアドレス"></li>
+						<li><textarea name="message" wrap=soft rows="6" cols="60" placeholder="お問い合わせ内容"></textarea></li>
+					</ul>
+					<button class="contact-form-btn">内容を確認する</button>
+				</div>
 			</div>
 		</section>
 
@@ -77,7 +132,7 @@
 
 	<footer class="footer" id="FooterView">
 		<a href="#PageView" class="btn-pagetop js-btnPagetop">TOP</a>
-		<p><small>&copy; Powered by kim.</small></p>
+		<p><small>&copy; Powered by Kim0ran.</small></p>
 	</footer>
 
 </div><!--/.page -->
