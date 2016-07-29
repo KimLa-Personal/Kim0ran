@@ -10,19 +10,19 @@
 ------------------------------------------------------------*/
 
 body {
-	background: url("../img/bg.gif") no-repeat right top;
-	background-attachment: fixed;
+  background: url("../img/bg.gif") no-repeat right top;
+  background-attachment: fixed;
 }
 
 .page {
-	position: relative;
+  position: relative;
 }
 
 .inner {
-	position: relative;
-	max-width: 980px;
-	margin: 0 auto;
-	overflow: hidden;
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 
@@ -31,19 +31,19 @@ body {
 ------------------------------------------------------------*/
 
 .header {
-	position: relative;
-	min-height: 500px;
+  position: relative;
+  min-height: 500px;
 }
 
 .header h1 {
-	position: absolute;
-	left: 50px;
-	bottom: 70px;
-	font-size: 120px;
-	color: #6d92da;
-	font-weight: normal;
-	font-weight: bold;
-	text-shadow: 0 0 5px #fff;
+  position: absolute;
+  left: 50px;
+  bottom: 70px;
+  font-size: 120px;
+  color: #6d92da;
+  font-weight: normal;
+  font-weight: bold;
+  text-shadow: 0 0 5px #fff;
 }
 
 
@@ -52,42 +52,42 @@ body {
 ------------------------------------------------------------*/
 
 .globalNav {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	z-index: 2;
-	width: 100%;
-	background: #111;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
+  background: #111;
 }
 .globalNav.fixed {
-	position: fixed;
-	top: 0;
-	bottom: auto;
+  position: fixed;
+  top: 0;
+  bottom: auto;
 }
 
 .globalNav ul {
-	overflow: hidden;
+  overflow: hidden;
 }
 
 .globalNav li {
-	float: left;
-	width: 20%;
+  float: left;
+  width: 20%;
 }
 
 .globalNav a {
-	display: block;
-	width: 100%;
-	padding: 20px 0;
-	font-size: 16px;
-	color: #cbd0e4;
-	text-align: center;
-	text-decoration: none;
+  display: block;
+  width: 100%;
+  padding: 20px 0;
+  font-size: 16px;
+  color: #cbd0e4;
+  text-align: center;
+  text-decoration: none;
 }
 
 .globalNav .current a,
 .globalNav a:hover {
-	color: #fff;
-	text-shadow: 0 0 3px #fff;
+  color: #fff;
+  text-shadow: 0 0 3px #fff;
 }
 
 
@@ -96,28 +96,28 @@ body {
 ------------------------------------------------------------*/
 
 .section {
-	position: relative;
-	min-height: 700px;
-	margin-bottom: 500px;
-	padding: 100px 20px;
-	/*background: #039;*/
-	background: rgba(0, 15, 135, 0.8);
-	font-size: 14px;
-	color: #fff;
-	text-align: center;
+  position: relative;
+  min-height: 700px;
+  margin-bottom: 500px;
+  padding: 100px 20px;
+  /*background: #039;*/
+  background: rgba(0, 15, 135, 0.8);
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
 }
 /*
 .section:after {
-	content: "";
-	display: block;
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	height: 500px;
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-attachment: fixed;
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 500px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 .section:nth-of-type(1):after { background-image: url(../img/bg_section01.jpg); }
 .section:nth-of-type(2):after { background-image: url(../img/bg_section02.jpg); }
@@ -126,8 +126,8 @@ body {
 .section:nth-of-type(5):after { background-image: url(../img/bg_section05.jpg); }
 */
 .section h2 {
-	margin-bottom: 40px;
-	font-size: 36px;
+  margin-bottom: 40px;
+  font-size: 36px;
 }
 
 
@@ -136,25 +136,25 @@ body {
 ------------------------------------------------------------*/
 
 .footer {
-	padding: 30px 0;
-	text-align: center;
+  padding: 30px 0;
+  text-align: center;
 }
 
 .btn-pagetop {
-	display: inline-block;
-	position: fixed;
-	right: 15px;
-	bottom: 15px;
-	z-index: 2;
-	width: 80px;
-	height: 47px;
-	padding-top: 33px;
-	background: rgba(0, 0, 0, 0.1);
-	border-radius: 50%;
-	font-size: 20px;
-	color: #fff !important;
-	text-align: center;
-	text-decoration: none !important;
+  display: inline-block;
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  z-index: 2;
+  width: 80px;
+  height: 47px;
+  padding-top: 33px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  font-size: 20px;
+  color: #fff !important;
+  text-align: center;
+  text-decoration: none !important;
 }
 .btn-pagetop:hover { opacity: 0.5; }
 
@@ -164,37 +164,37 @@ body {
 ------------------------------------------------------------*/
 
 .loader {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 10;
-	width: 100%;
-	height: 100%;
-	background: #fff;
-	text-align: center;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  text-align: center;
 }
 
 .loader-load {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 50%;
-	margin-left: -25%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  margin-left: -25%;
 }
 .loader-load-border {
-	height: 2px;
-	margin-bottom: 10px;
-	background: #ddd;
+  height: 2px;
+  margin-bottom: 10px;
+  background: #ddd;
 }
 .loader-load-border span {
-	display: block;
-	width: 0;
-	height: 100%;
-	background: #555;
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #555;
 }
 .loader-load p {
-	font-size: 14px;
-	color: #999;
-	text-align: right;
+  font-size: 14px;
+  color: #999;
+  text-align: right;
 }

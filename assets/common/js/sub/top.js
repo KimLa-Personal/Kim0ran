@@ -4,99 +4,133 @@
 
 (function() {
 
-	var global = APP.global;
-	var fn = APP.fn;
-	var ui = APP.ui;
-	var utils = APP.utils;
-	var views = APP.views;
+  var global = APP.global;
+  var fn = APP.fn;
+  var ui = APP.ui;
+  var utils = APP.utils;
+  var views = APP.views;
 
-	/**
-	 * ページ
-	 */
-	var PageView = (function() {
-		var constructor = function(el) {
-			return this;
-		};
-		var proto = constructor.prototype = new views.PageView();
-		proto.setChildViewInstance = function() {
-			views.PageView.prototype.setChildViewInstance.apply(this);
+  /**
+   * ページ
+   */
+  var PageView = (function() {
+    var constructor = function(el) {
+      return this;
+    };
+    var proto = constructor.prototype = new views.PageView();
+    proto.onLoadFunction = function() {
 
-			/* プロフィール */
-			var profileView = new ProfileView();
-			profileView.init('#profile');
+      /* プリローダー */
+      new ui.preloader({ el: '.js-loader' });
 
-			/* コンセプト */
-			var conceptView = new SectionView();
-			conceptView.init('#concept');
+      views.PageView.prototype.onLoadFunction.apply(this);
+      return this;
+    };
+    proto.setChildViewInstance = function() {
+      views.PageView.prototype.setChildViewInstance.apply(this);
 
-			/* ギャラリー */
-			var galleryView = new SectionView();
-			galleryView.init('#gallery');
+      /* プロフィール */
+      var profileView = new ProfileView();
+      profileView.init('#ProfileView');
 
-			/* ブログ */
-			var blogView = new SectionView();
-			blogView.init('#blog');
+      /* コンセプト */
+      var conceptView = new SectionView();
+      conceptView.init('#ConceptView');
 
-			/* お問い合わせ */
-			var contactView = new SectionView();
-			contactView.init('#contact');
+      /* ギャラリー */
+      var galleryView = new SectionView();
+      galleryView.init('#GalleryView');
 
-			return this;
-		};
-		return constructor;
-	})();
+      /* ブログ */
+      var blogView = new SectionView();
+      blogView.init('#BlogView');
 
-	/**
-	 * セクション
-	 */
-	var SectionView = (function() {
-		var constructor = function() {
-			this.$el = {};
-			return this;
-		};
-		var proto = constructor.prototype;
-		proto.init = function(el) {
-			this.setEl(el);
-			this.onLoadFunction();
-			this.setEvents();
-			return this;
-		};
-		proto.setEl = function(el) {
-			this.$el = $(el);
-			return this;
-		};
-		proto.onLoadFunction = function() {
+      /* お問い合わせ */
+      var contactView = new SectionView();
+      contactView.init('#ContactView');
 
-			return this;
-		};
-		proto.setEvents = function() {
+      return this;
+    };
+    return constructor;
+  })();
 
-			return this;
-		};
-		return constructor;
-	})();
+  /**
+   * セクション
+   */
+  var SectionView = (function() {
+    var constructor = function() {
+      this.$el = {};
+      this.$child = {};
+      this.offsetTop = 0;
+      this.fadeSpeed = 500;
+      this.isShow = false;
+      this.isAnimate = false;
+      return this;
+    };
+    var proto = constructor.prototype;
+    proto.init = function(el) {
+      this.setEl(el);
+      this.onLoadFunction();
+      this.setEvents();
+      return this;
+    };
+    proto.setEl = function(el) {
+      this.$el = $(el);
+      this.$child = this.$el.children();
+      return this;
+    };
+    proto.onLoadFunction = function() {
+      this.offsetTop = this.$el.offset().top - $(window).height()/2;
+      this.$child.hide();
+      return this;
+    };
+    proto.setEvents = function() {
+      var that = this;
+      $(window).on('scroll', function() {
+        if(!that.isShow && !that.isAnimate) {
+          that.onScroll($(window).scrollTop());
+        }
+      });
+      return this;
+    };
+    proto.onScroll = function(scrollTop) {
+      var that = this;
+      if(scrollTop > this.offsetTop) {
+        this.showChild();
+        this.isAnimate = false;
+        this.isShow = true;
+      }
+      return this;
+    };
+    proto.showChild = function() {
+      this.isAnimate = true;
+      this.$child.fadeIn(this.fadeSpeed);
+      return this;
+    };
+    return constructor;
+  })();
 
-	/**
-	 * プロフィール
-	 */
-	var ProfileView = (function() {
-		var constructor = function() {
-			return this;
-		};
-		var proto = constructor.prototype = new SectionView();
-		proto.onLoadFunction = function() {
+  /**
+   * プロフィール
+   */
+  var ProfileView = (function() {
+    var constructor = function() {
+      return this;
+    };
+    var proto = constructor.prototype = new SectionView();
+    proto.onLoadFunction = function() {
+      SectionView.prototype.onLoadFunction.apply(this);
 
-			/* 切り替えコンテンツ */
-			new ui.switchContents('.js-switchContents');
+      /* 切り替えコンテンツ */
+      new ui.switchContents('.js-switchContents');
 
-			SectionView.prototype.onLoadFunction.apply(this);
-			return this;
-		};
-		return constructor;
-	})();
+      return this;
+    };
+    return constructor;
+  })();
 
-	/* ページ */
-	var pageView = new PageView();
-	pageView.init('#PageView');
+  /* ページ */
+  var pageView = new PageView();
+  pageView.init('#PageView');
 
 })();
