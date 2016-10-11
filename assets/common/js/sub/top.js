@@ -43,6 +43,9 @@
       var preloader = ui.preloader();
       preloader.init({ el: '.js-loader' });
 
+      /* 子要素の高さを合わせる */
+      utils.matchHeight('.js-matchHeight');
+
       this.getSectionOffsetArray();
       this.setSectionViewInstance();
       return this;
@@ -101,6 +104,7 @@
     proto.onScroll = function(scrollTop) {
       this.isAnimate = true;
       this.globalNavView.onScroll(scrollTop);
+      this.footerView.onScroll(scrollTop);
       return this;
     };
     proto.onResize = function() {
@@ -219,6 +223,18 @@
       this.$btnPagetop = this.$el.find('.js-btnPagetop');
       return this;
     };
+    proto.onLoadFunction = function() {
+      this.$btnPagetop.hide();
+      return this;
+    };
+    proto.onScroll = function(scrollTop) {
+      if(scrollTop > $(window).height() *1.5) {
+        this.$btnPagetop.fadeIn();
+      } else {
+        this.$btnPagetop.fadeOut();
+      }
+      return this;
+    };
     return constructor;
   })();
 
@@ -291,12 +307,13 @@
       return this;
     };
     var proto = constructor.prototype = new SectionView();
-    proto.setChildViewInstance = function() {
+    proto.onLoadFunction = function() {
 
       /* 切り替えコンテンツ */
       var switchView = new ui.switchView();
       switchView.init({ el: '.js-switchView' });
 
+      SectionView.prototype.onLoadFunction.apply(this);
       return this;
     };
     return constructor;

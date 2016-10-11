@@ -166,6 +166,44 @@
 
   app.utils = {
 
+    /**
+     * 子要素の高さを合わせる
+     */
+    matchHeight: function(el) {
+      var $el = {};
+      var $child = {};
+      var maxHeight = 0;
+      var init = function() {
+        setEl();
+        getHeight();
+        setHeight();
+        return this;
+      };
+      var setEl = function() {
+        $el = $(el);
+        $child = $el.children();
+        return this;
+      };
+      var getHeight = function() {
+        var array = [];
+        $child.each(function() {
+          array.push($(this).outerHeight());
+        });
+        array.sort(function(a, b) {
+          if(a > b) return -1;
+          if(a < b) return 1;
+          return 0;
+        });
+        maxHeight = array[0];
+        return this;
+      };
+      var setHeight = function() {
+        $el.css({ height: maxHeight });
+        return this;
+      };
+      init();
+    }
+
   };
 
 
