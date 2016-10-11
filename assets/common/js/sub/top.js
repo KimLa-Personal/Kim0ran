@@ -4,11 +4,11 @@
 
 (function() {
 
-  var global = APP.global;
-  var fn = APP.fn;
-  var ui = APP.ui;
-  var utils = APP.utils;
-  var views = APP.views;
+  var global = App.global;
+  var fn = App.fn;
+  var ui = App.ui;
+  var utils = App.utils;
+  var views = App.views;
 
   /* グローバル変数 */
   global.sectionOffsetArray = [];  // 各セクション位置配列

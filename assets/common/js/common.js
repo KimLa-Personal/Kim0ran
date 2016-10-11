@@ -4,24 +4,24 @@
 
 (function(window, undefined) {
 
-  var App = {
+  var app = {
     global: {},
     fn: {},
     ui: {},
     utils: {},
     views: {}
   };
-  window.APP = App;
+  window.App = app;
 
 })(window);
 
-(function(App, window, decument, undefined) {
+(function(app, window, decument, undefined) {
 
 
 /* global
 ------------------------------------------------------------*/
 
-  App.global = {
+  app.global = {
 
   };
 
@@ -29,7 +29,7 @@
 /* fn
 ------------------------------------------------------------*/
 
-  App.fn = {
+  app.fn = {
 
   };
 
@@ -37,7 +37,7 @@
 /* ui
 ------------------------------------------------------------*/
 
-  App.ui = {
+  app.ui = {
 
     /**
      * プリローダー
@@ -164,7 +164,7 @@
 /* utils
 ------------------------------------------------------------*/
 
-  App.utils = {
+  app.utils = {
 
   };
 
@@ -172,7 +172,7 @@
 /* views
 ------------------------------------------------------------*/
 
-  App.views = {
+  app.views = {
 
     /**
      * ベース
@@ -277,4 +277,4 @@
 
   };
 
-})(APP, window, document);
+})(App, window, document);
