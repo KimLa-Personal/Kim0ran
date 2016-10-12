@@ -23,6 +23,7 @@
       this.headerView = {};
       this.globalNavView = {};
       this.footerView = {};
+      this.modalView = {};
       this.init(el);
       return this;
     };
@@ -35,6 +36,7 @@
     proto.setEl = function(el) {
       views.PageView.prototype.setEl.apply(this, [el]);
       this.$section = this.$el.find('.section');
+      this.$btnModalOpen = this.$el.find('.js-modalBtnOpen');
       return this;
     };
     proto.onLoadFunction = function() {
@@ -52,7 +54,7 @@
     };
     proto.getSectionOffsetArray = function() {
       var that = this;
-      global.scrollAdjustHeight = Math.floor($(window).height()/2);
+      global.scrollAdjustHeight = Math.floor($(window).height()/7);
       var sectionOffsetArray = [];
       this.$section.each(function() {
         sectionOffsetArray.push($(this).offset().top);
@@ -74,6 +76,11 @@
       /* フッタ */
       this.footerView = new FooterView();
       this.footerView.init({ el: '#FooterView' });
+
+      /* モーダル */
+      this.modalView = new views.ModalView();
+      this.modalView.parentViewEl = this.$el;
+      this.modalView.init({ el: '#ModalView'});
 
       return this;
     };
@@ -99,6 +106,14 @@
       var contactView = new ContactView();
       contactView.init({ el: '#ContactView' });
 
+      return this;
+    };
+    proto.setEvents = function() {
+      views.PageView.prototype.setEvents.apply(this);
+      var that = this;
+      this.$btnModalOpen.on('click', function() {
+        that.modalView.onClickBtnOpen($(this).data('target'));
+      });
       return this;
     };
     proto.onScroll = function(scrollTop) {
@@ -151,6 +166,8 @@
       this.$listChild = {};
       this.$anchor = {};
       this.$btnSlideToggle = {};
+      this.elHeight = 0;
+      this.positionTop = 0;
       this.classNavCurrent = 'current';
       this.isAnimate = false;
       this.isOpen = false;
@@ -167,7 +184,25 @@
       return this;
     };
     proto.onLoadFunction = function() {
-      this.$list.hide();
+      this.setStyle();
+      this.showEl();
+      return this;
+    };
+    proto.setStyle = function() {
+      var that = this;
+      setTimeout(function() {
+        that.elHeight = that.$el.outerHeight();
+        that.positionTop = $(window).height() - that.elHeight;
+        that.$el.css({ top: fn.isMediaSp() ? 0 : that.positionTop });
+      }, 200);
+      return this;
+    };
+    proto.showEl = function() {
+      if(fn.isMediaSp()) {
+        this.$list.hide();
+      } else {
+        this.$list.show();
+      }
       return this;
     };
     proto.setEvents = function() {
@@ -188,11 +223,28 @@
     };
     proto.animateSlideNav = function() {
       this.isAnimate = true;
-      this.$list.slideToggle();
-      this.isOpen = this.isOpen ? false : true;
+      if(fn.isMediaSp()) {
+        this.$list.slideToggle();
+        this.isOpen = this.isOpen ? false : true;
+      }
       return this;
     };
     proto.onScroll = function(scrollTop) {
+      this.setElPosition(scrollTop);
+      this.setClassCurrent(scrollTop);
+      return this;
+    };
+    proto.setElPosition = function(scrollTop) {
+      if(scrollTop > $(window).height() - this.elHeight) {
+        this.$el.addClass('fixed');
+        this.$el.css({ top: 0 });
+      } else {
+        this.$el.removeClass('fixed');
+        this.$el.css({ top: fn.isMediaSp() ? 0 : this.positionTop });
+      }
+      return this;
+    };
+    proto.setClassCurrent = function(scrollTop) {
       this.$nav.find('.' + this.classNavCurrent).removeClass(this.classNavCurrent);
       scrollTop = scrollTop + global.scrollAdjustHeight;
       for(var i=0; i<global.sectionOffsetArray.length; i++) {
@@ -204,6 +256,8 @@
       return this;
     };
     proto.onResize = function() {
+      this.setStyle();
+      this.showEl();
       return this;
     };
     return constructor;

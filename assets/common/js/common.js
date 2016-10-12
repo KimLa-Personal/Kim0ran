@@ -31,6 +31,13 @@
 
   app.fn = {
 
+    /**
+     * デバイス判定
+     */
+    isMediaSp: function() {
+      return ($(window).width() > 640) ? false : true;
+    }
+
   };
 
 
@@ -308,6 +315,114 @@
         $('html, body').animate({
           scrollTop: position
         }, this.scrollSpeed, 'swing');
+        return this;
+      };
+      return constructor;
+    })(),
+
+    /**
+     * モーダル
+     */
+    ModalView: (function() {
+      var constructor = function() {
+        this.$el = {};
+        this.$inner = {};
+        this.$main = {};
+        this.$btnClose = {};
+        this.openWrapScrollTop = 0;
+        this.fadeSpeed = 500;
+        this.isAnimate = false;
+        this.isOpen = false;
+        this.callback = {};
+        return this;
+      };
+      var proto = constructor.prototype;
+      proto.init = function(args) {
+        this.isOpen = (args.isOpen !== undefined) ? args.isOpen : this.isOpen;
+        this.callback = args.callback || {};
+        this.setEl(args.el);
+        this.onLoadFunction();
+        this.setEvents();
+        return this;
+      };
+      proto.setEl = function(el) {
+        this.$el = $(el);
+        this.$inner = this.$el.find('.js-modalInner');
+        this.$main = this.$el.find('.js-modalMain');
+        this.$btnClose = this.$el.find('.js-modalBtnClose');
+        return this;
+      };
+      proto.onLoadFunction = function() {
+        this.$el.hide();
+        return this;
+      };
+      proto.setEvents = function() {
+        var that = this;
+        this.$btnClose.on('click', function() {
+          that.onClickBtnClose();
+        });
+        this.$el.on('click', function() {
+          that.onClickBtnClose();
+        });
+        this.$inner.on('click', function(e) {
+          e.stopPropagation();
+        });
+        return this;
+      };
+      proto.onClickBtnOpen = function(cloneEl) {
+        if(!this.isAnimate && $(cloneEl).length > 0) {
+          this.openModal(cloneEl);
+          this.isAnimate = false;
+          this.isOpen = true;
+        }
+        return this;
+      };
+      proto.openModal = function(cloneEl) {
+        var that = this;
+        this.isAnimate = true;
+        this.openWrapScrollTop = $(window).scrollTop();
+        this.$main.append($(cloneEl).html()).promise().done(function() {
+          that.onAppend(cloneEl);
+        });
+        this.parentViewEl.css({
+          position: 'fixed',
+          top: -this.openWrapScrollTop
+        });
+        return this;
+      };
+      proto.onAppend = function(cloneEl) {
+        if(!App.fn.isMediaSp) {
+          this.$inner.css({ width: $(cloneEl).data('width') || 'auto' });
+        }
+        this.$el.fadeIn(this.fadeSpeed);
+        this.$inner.css({
+          top: Math.ceil(($(window).height() - this.$inner.outerHeight())/2),
+          left: Math.ceil(($(window).width() - this.$inner.outerWidth())/2)
+        });
+        if(this.callback) {
+          this.callback();
+        }
+        return this;
+      };
+      proto.onClickBtnClose = function() {
+        if(!this.isAnimate) {
+          this.closeModal();
+          this.isAnimate = false;
+          this.isOpen = false;
+        }
+        return this;
+      };
+      proto.closeModal = function() {
+        var that = this;
+        this.isAnimate = true;
+        this.$el.fadeOut(this.fadeSpeed, function() {
+          that.$main.children().remove();
+        });
+        this.parentViewEl.css({
+          position: 'relative',
+          top: 'auto'
+        });
+        $(window).scrollTop(this.openWrapScrollTop);
         return this;
       };
       return constructor;
