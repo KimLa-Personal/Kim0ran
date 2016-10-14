@@ -44,6 +44,7 @@
       /* プリローダー */
       var preloader = ui.preloader();
       preloader.init({ el: '.js-loader' });
+      //$('.js-loader').hide();
 
       /* 子要素の高さを合わせる */
       utils.matchHeight('.js-matchHeight');
