@@ -55,7 +55,7 @@
     };
     proto.getSectionOffsetArray = function() {
       var that = this;
-      global.scrollAdjustHeight = Math.floor($(window).height()/7);
+      global.scrollAdjustHeight = Math.floor($(window).height()/2);
       var sectionOffsetArray = [];
       this.$section.each(function() {
         sectionOffsetArray.push($(this).offset().top);
