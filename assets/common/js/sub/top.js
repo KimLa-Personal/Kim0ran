@@ -393,6 +393,15 @@
       return this;
     };
     var proto = constructor.prototype = new SectionView();
+    proto.onLoadFunction = function() {
+
+      /* カルーセル */
+      var carouselView = new ui.CarouselView();
+      carouselView.init({ el: '.js-carousel' });
+
+      SectionView.prototype.onLoadFunction.apply(this);
+      return this;
+    };
     return constructor;
   })();
 

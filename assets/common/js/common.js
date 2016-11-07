@@ -114,6 +114,111 @@
     },
 
     /**
+     * カルーセル
+     */
+    CarouselView: (function() {
+      var constructor = function() {
+        this.$el = {};
+        this.$list = {};
+        this.$btnPrev = {};
+        this.$btnNext = {};
+        this.itemLength = 0;
+        this.slideWidth = 0;
+        this.slideSpeed = 500;
+        this.isShowNum = 0;
+        this.isAnimate = false;
+        return this;
+      };
+      var proto = constructor.prototype;
+      proto.init = function(args) {
+        this.setEl(args.el);
+        this.onLoadFunction();
+        this.setEvents();
+        return this;
+      };
+      proto.setEl = function(el) {
+        this.$el = $(el);
+        this.$inner = this.$el.find('.js-carouselInner');
+        this.$list = this.$el.find('.js-carouselList');
+        this.$item = this.$list.children();
+        this.$btnPrev = this.$el.find('.js-carouselBtnPrev');
+        this.$btnNext = this.$el.find('.js-carouselBtnNext');
+        return this;
+      };
+      proto.onLoadFunction = function() {
+
+
+        this.setStyle();
+        this.checkShowControlBtn();
+        return this;
+      };
+      proto.setStyle = function() {
+        this.itemLength = this.$item.length;
+        this.$inner.css({
+          height: this.$item.height()
+        });
+        this.$item.css({
+          width: this.$el.width()
+        });
+        this.slideWidth = this.$item.outerWidth(true);
+        this.$list.css({
+          left: 0,
+          width: this.slideWidth * this.itemLength
+        });
+        return this;
+      };
+      proto.setEvents = function() {
+        var that = this;
+        this.$btnPrev.on('click', function() {
+          if(!that.isAnimate) {
+            that.onClickBtnPrev();
+            that.isAnimate = false;
+          }
+        });
+        this.$btnNext.on('click', function() {
+          if(!that.isAnimate) {
+            that.onClickBtnNext();
+            that.isAnimate = false;
+          }
+        });
+        return this;
+      };
+      proto.onClickBtnPrev = function() {
+        this.isAnimate = true;
+        this.isShowNum--;
+        this.animateSlideList();
+        return this;
+      };
+      proto.onClickBtnNext = function() {
+        this.isAnimate = true;
+        this.isShowNum++;
+        this.animateSlideList();
+        return this;
+      };
+      proto.animateSlideList = function() {
+        this.$list.animate({
+          left: -(this.slideWidth * this.isShowNum)
+        }, this.slideSpeed);
+        this.checkShowControlBtn();
+        return this;
+      };
+      proto.checkShowControlBtn = function() {
+        if(this.isShowNum === 0) {
+          this.$btnPrev.hide();
+        } else {
+          this.$btnPrev.show();
+        }
+        if(this.isShowNum === this.itemLength-1) {
+          this.$btnNext.hide();
+        } else {
+          this.$btnNext.show();
+        }
+        return this;
+      };
+      return constructor;
+    })(),
+
+    /**
      * 切り替えコンテンツ
      */
     switchView: function() {

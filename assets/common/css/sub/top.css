@@ -145,6 +145,68 @@ body {
 }
 
 
+/* gallery
+--------------------------------------------------*/
+
+.gallery { padding: 50px 0; }
+
+.gallery-carousel {
+  position: relative;
+  padding: 0 30px;
+  overflow: hidden;
+}
+
+.gallery-carousel-inner { position: relative; }
+
+.gallery-carousel-list {
+  position: absolute;
+  top: 0;
+}
+
+.gallery-carousel-list li {
+  float: left;
+  margin-right: 20px;
+}
+
+.gallery-carousel-list li img {
+  width: 100%;
+  height: auto;
+}
+
+.gallery-carousel-btnPrev,
+.gallery-carousel-btnNext {
+  position: absolute;
+  top: 15px;
+  width: 35px;
+  height: 100%;
+  margin-top: -15px;
+  text-indent: -9999px;
+  cursor: pointer;
+}
+.gallery-carousel-btnPrev { left: 0; }
+.gallery-carousel-btnNext { right: 0; }
+
+.gallery-carousel-btnPrev:after,
+.gallery-carousel-btnNext:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  margin-top: -15px;
+  border-top: 3px solid #fff;
+  border-left: 3px solid #fff;
+}
+.gallery-carousel-btnPrev:after {
+  left: 10px;
+  -webkit-transform: rotate(-45deg);
+}
+.gallery-carousel-btnNext:after {
+  right: 10px;
+  -webkit-transform: rotate(135deg);
+}
+
+
 /* blog
 --------------------------------------------------*/
 
