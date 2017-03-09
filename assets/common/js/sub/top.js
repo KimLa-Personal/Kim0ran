@@ -44,7 +44,6 @@
       /* プリローダー */
       var preloader = ui.preloader();
       preloader.init({ el: '.js-loader' });
-      //$('.js-loader').hide();
 
       /* 子要素の高さを合わせる */
       utils.matchHeight('.js-matchHeight');
@@ -76,6 +75,7 @@
 
       /* フッタ */
       this.footerView = new FooterView();
+      this.footerView.parentViewEl = this.$el;
       this.footerView.init({ el: '#FooterView' });
 
       /* モーダル */
@@ -130,6 +130,13 @@
     };
     proto.setCustomEvents = function() {
       var that = this;
+      this.$el.on('onClickBtnModalOpenTrigger', function(e, target) {
+        that.onClickBtnModalOpenTrigger(target);
+      });
+      return this;
+    };
+    proto.onClickBtnModalOpenTrigger = function(target) {
+      this.modalView.onClickBtnOpen($(target).data('target'));
       return this;
     };
     return constructor;
@@ -191,11 +198,11 @@
     };
     proto.setStyle = function() {
       var that = this;
-      setTimeout(function() {
+      //setTimeout(function() {
         that.elHeight = that.$el.outerHeight();
         that.positionTop = $(window).height() - that.elHeight;
         that.$el.css({ top: fn.isMediaSp() ? 0 : that.positionTop });
-      }, 200);
+      //}, 200);
       return this;
     };
     proto.showEl = function() {
@@ -269,25 +276,82 @@
    */
   var FooterView = (function() {
     var constructor = function() {
+      this.$snsList = {};
+      this.$snsListIcon = {};
+      this.$nsListText = {};
+      this.classSnsListText = '.js-snsListText';
       this.$btnPagetop = {};
+      this.collection = [];
       return this;
     };
     var proto = constructor.prototype = new views.BaseView();
     proto.setEl = function(el) {
       views.BaseView.prototype.setEl.apply(this, [el]);
+      this.$snsList = this.$el.find('.js-snsList');
+      this.$snsListText = this.$el.find(this.classSnsListText);
       this.$btnPagetop = this.$el.find('.js-btnPagetop');
       return this;
     };
     proto.onLoadFunction = function() {
-      this.$btnPagetop.hide();
+      if(!fn.isMediaSp()) {
+        this.$btnPagetop.hide();
+      }
+      this.getFeed();
+      return this;
+    };
+    proto.getFeed = function() {
+      var that = this;
+      $.ajax({
+        type: 'get',
+        url: "/common/data/sns.json",
+        dataType: 'json',
+      }).done(function(data) {
+        that.collection = data.sns;
+        that.render();
+      }).fail(function() {
+        that.error('データが取得できませんでした');
+      });
+      return this;
+    };
+    proto.render = function() {
+      var that = this;
+      var tmpl = [];
+      for(var i=0; i<this.collection.length;i++) {
+        var model = this.collection[i];
+        if(model.flg > 0) {
+          if(model.url !== '') {
+            tmpl.push('<li><a href="' + model.url + '" class="icon-' + model.id + '">' + model.name + '</a></li>');
+          } else {
+            tmpl.push('<li><span class="icon-' + model.id + ' js-modalBtnOpen" data-target="' + this.classSnsListText + '" data-message="' + model.message + '">' + model.name + '</span></li>');
+          }
+        }
+      }
+      this.$snsList.append(tmpl.join('')).promise().done(function() {
+        that.$snsListIcon = that.$snsList.find('span');
+        that.setOnRenderEvents();
+      });
+      return this;
+    };
+    proto.setOnRenderEvents = function() {
+      var that = this;
+      this.$snsListIcon.on('click', function() {
+        that.onClickSnsListIcon(this);
+      });
+      return this;
+    };
+    proto.onClickSnsListIcon = function(target) {
+      this.$snsListText.html('<p>' + $(target).data('message') + '</p>');
+      this.parentViewEl.trigger('onClickBtnModalOpenTrigger', target);
       return this;
     };
     proto.onScroll = function(scrollTop) {
-      if(scrollTop > $(window).height() *1.5) {
-        this.$btnPagetop.fadeIn();
-      } else {
-        this.$btnPagetop.fadeOut();
-      }
+        if(!fn.isMediaSp()) {
+          if(scrollTop > $(window).height() *1.5) {
+            this.$btnPagetop.fadeIn();
+          } else {
+            this.$btnPagetop.fadeOut();
+          }
+        }
       return this;
     };
     return constructor;
@@ -427,7 +491,11 @@
     return constructor;
   })();
 
-  /* ページ */
-  new PageView('#PageView');
+  $(window).load(function() {
+
+    /* ページ */
+    new PageView('#PageView');
+
+  });
 
 })();
