@@ -44,6 +44,7 @@
       /* プリローダー */
       var preloader = ui.preloader();
       preloader.init({ el: '.js-loader' });
+      //$('.js-loader').hide();
 
       /* 子要素の高さを合わせる */
       utils.matchHeight('.js-matchHeight');
@@ -170,6 +171,7 @@
    */
   var GlobalNavView = (function() {
     var constructor = function() {
+      this.$header = {};
       this.$list = {};
       this.$listChild = {};
       this.$anchor = {};
@@ -177,6 +179,7 @@
       this.elHeight = 0;
       this.positionTop = 0;
       this.classNavCurrent = 'current';
+      this.slideSpeed = 500;
       this.isAnimate = false;
       this.isOpen = false;
       return this;
@@ -184,6 +187,7 @@
     var proto = constructor.prototype = new views.BaseView();
     proto.setEl = function(el) {
       views.BaseView.prototype.setEl.apply(this, [el]);
+      this.$header = this.$el.find('.js-globalNavHeader');
       this.$list = this.$el.find('.js-globalNavList');
       this.$nav = this.$el.find('.globalNav-nav-list');
       this.$navChild = this.$nav.children();
@@ -197,12 +201,9 @@
       return this;
     };
     proto.setStyle = function() {
-      var that = this;
-      //setTimeout(function() {
-        that.elHeight = that.$el.outerHeight();
-        that.positionTop = $(window).height() - that.elHeight;
-        that.$el.css({ top: fn.isMediaSp() ? 0 : that.positionTop });
-      //}, 200);
+      this.elHeight = this.$el.outerHeight();
+      this.positionTop = $(window).height() - this.elHeight;
+      this.$el.css({ top: fn.isMediaSp() ? 0 : this.positionTop });
       return this;
     };
     proto.showEl = function() {
@@ -215,11 +216,21 @@
     };
     proto.setEvents = function() {
       var that = this;
-      this.$btnSlideToggle.on('click', function() {
+      this.$el.on('click', function() {
         if(!that.isAnimate) {
           that.animateSlideNav();
           that.isAnimate = false;
         }
+      });
+      this.$btnSlideToggle.on('click', function(e) {
+        e.stopPropagation();
+        if(!that.isAnimate) {
+          that.animateSlideNav();
+          that.isAnimate = false;
+        }
+      });
+      this.$nav.on('click', function(e) {
+        e.stopPropagation();
       });
       this.$anchor.on('click', function() {
         if(!that.isAnimate) {
@@ -231,15 +242,39 @@
     };
     proto.animateSlideNav = function() {
       this.isAnimate = true;
-      if(fn.isMediaSp()) {
-        this.$list.slideToggle();
-        this.isOpen = this.isOpen ? false : true;
+      if(!this.isOpen) {
+        this.animateSlideOpen();
+      } else {
+        this.animateSlideClose();
       }
+      return this;
+    };
+    proto.animateSlideOpen = function() {
+      this.$el.addClass('active');
+      this.$list.slideDown(this.slideSpeed);
+      var windowHeight = window.innerHeight ? window.innerHeight: $(window).height();
+      this.$el.css({ height: windowHeight });
+      this.isOpen = true;
+      return this;
+    };
+    proto.animateSlideClose = function() {
+      var that = this;
+      this.$list.slideUp(this.slideSpeed, function() {
+        that.$el.removeClass('active');
+      });
+      this.$el.css({ height: 'auto' });
+      this.isOpen = false;
       return this;
     };
     proto.onScroll = function(scrollTop) {
       this.setElPosition(scrollTop);
       this.setClassCurrent(scrollTop);
+      if(fn.isMediaSp() && this.isOpen) {
+        if(!this.isAnimate) {
+          this.animateSlideNav();
+          this.isAnimate = false;
+        }
+      }
       return this;
     };
     proto.setElPosition = function(scrollTop) {
@@ -303,7 +338,7 @@
       var that = this;
       $.ajax({
         type: 'get',
-        url: "/common/data/sns.json",
+        url: "./common/data/sns.json",
         dataType: 'json',
       }).done(function(data) {
         that.collection = data.sns;
@@ -340,7 +375,7 @@
       return this;
     };
     proto.onClickSnsListIcon = function(target) {
-      this.$snsListText.html('<p>' + $(target).data('message') + '</p>');
+      this.$snsListText.html('<p class="">' + $(target).data('message') + '</p>');
       this.parentViewEl.trigger('onClickBtnModalOpenTrigger', target);
       return this;
     };
@@ -491,11 +526,7 @@
     return constructor;
   })();
 
-  $(window).load(function() {
-
-    /* ページ */
-    new PageView('#PageView');
-
-  });
+  /* ページ */
+  new PageView('#PageView');
 
 })();

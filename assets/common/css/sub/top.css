@@ -27,7 +27,7 @@ body {
 
 
 /*----------------------------------------------------------
- base
+ header
 ------------------------------------------------------------*/
 
 .header {
@@ -35,6 +35,10 @@ body {
   min-height: 568px;
 }
 
+.header-logo img {
+  width: 100%;
+  height: auto;
+}
 
 /*----------------------------------------------------------
  main
@@ -59,8 +63,8 @@ body {
 }
 
 .section h2 {
-	margin-bottom: 40px;
-	font-size: 30px;
+  margin-bottom: 40px;
+  font-size: 30px;
 }
 
 
@@ -293,7 +297,6 @@ body {
   left: 50%;
   max-width: 80%;
   max-height: 80%;
-  padding: 30px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   background: #fff;
@@ -301,17 +304,21 @@ body {
   box-shadow: 0 0 3px #333;
 }
 
-.modal-header {
+.modal-header { min-height: 10px; }
 
-}
 .modal-header-btnClose {
-
+  position: absolute;
+  font-size: 24px;
+  color: #999;
+  line-height: 1em;
+  font-weight: bold;
 }
-.modal-main {
-  padding: 10px;
-  background: #ccc;
-}
 
+.modal-main > p:only-child {
+  padding: 50px 0;
+  font-size: 16px;
+  text-align: center;
+}
 
 
 /*--------------------------------------------------------------------
@@ -323,15 +330,13 @@ body {
  header
 ------------------------------------------------------------*/
 
-.header h1 {
+.header-logo {
   position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  font-size: 50px;
-  color: #aaa;
-  text-align: center;
-  font-weight: normal;
+  top: 40%;
+  left: 50%;
+  width: 80%;
+  height: auto;
+  margin-left: -40%;
 }
 
 
@@ -349,53 +354,81 @@ body {
   width: 100%;
 }
 
-.globalNav-btnGlobalNav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 2px;
-  background: #fff;
-  box-sizing: border-box;
-  color: #fff;
-  text-align: center;
-  opacity: 0.5;
+.globalNav.active { background: rgba(0, 0, 0, 0.7); }
+
+.globalNav-header {
+  position: relative;
+  padding: 6px 10px 5px;
+  background: rgba(255, 255, 255, 0.3);
 }
-.globalNav-btnGlobalNav:after {
-  content: "";
-  display: block;
+.globalNav.active .globalNav-header { background: #111; }
+
+.globalNav-header-logo {
+  width: 100px;
+  height: 33px;
+  background: url("../../img/logo_revers.png") no-repeat 0 0;
+  background-size: 100px 32px;
+  text-indent: -9999px;
+  opacity: 1;
+}
+.globalNav.active .globalNav-header-logo { opacity: 1; }
+
+/* globalNav-header-btnGlobalNav */
+.globalNav-header-btnGlobalNav {
   position: absolute;
-  top: 2px;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  border-bottom: 2px solid #666;
-  border-right: 2px solid #666;
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  top: 12px;
+  right: 10px;
+  width: 26px;
+  height: 22px;
+  text-indent: -9999px;
 }
+
+.globalNav-header-btnGlobalNav span,
+.globalNav-header-btnGlobalNav:before,
+.globalNav-header-btnGlobalNav:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #ddd;
+  text-indent: -9999px;
+}
+.globalNav-header-btnGlobalNav span { top: 0; }
+.globalNav-header-btnGlobalNav:before { top: 10px; }
+.globalNav-header-btnGlobalNav:after { top: 20px; }
+
+.globalNav.active .globalNav-header-btnGlobalNav span { display: none; }
+.globalNav.active .globalNav-header-btnGlobalNav:before,
+.globalNav.active .globalNav-header-btnGlobalNav:after {
+  top: 10px;
+  left: 0;
+  height: 1px;
+}
+.globalNav.active .globalNav-header-btnGlobalNav:before { -webkit-transform: rotate(45deg); }
+.globalNav.active .globalNav-header-btnGlobalNav:after {-webkit-transform: rotate(-45deg); }
+
+
+/* globalNav-nav
+--------------------------------------------------*/
 
 .globalNav-nav {
   display: none;
-  padding-top: 50px;
-  background: #039;
+  background: #002879;
 }
 
-.globalNav-nav li {
-  border-bottom: 1px solid #fff;
-}
-.globalNav-nav li:first-child { border-top: 1px solid #fff; }
+.globalNav-nav li { border-top: 1px solid #18449b; }
+.globalNav-nav li:first-child { border-top-width: 0; }
 
 .globalNav-nav li a {
   display: block;
-  padding: 15px;
+  padding: 20px 15px;
+  font-size: 16px;
   color: #fff;
   text-decoration: none;
 }
-
-.globalNav-nav li.current a {
-  text-shadow: 0 0 3px #fff;
-}
+.globalNav-nav li.current a { text-shadow: 0 0 3px #fff; }
 
 
 /*----------------------------------------------------------
@@ -523,14 +556,14 @@ body {
 ------------------------------------------------------------*/
 
 .footer {
-	text-align: center;
+  text-align: center;
 }
 
 .btn-pagetop {
   display: block;
   position: relative;
   padding: 15px 0;
-	border-top: 1px solid #eee;
+  border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
   text-indent: -9999px;
 }
@@ -554,6 +587,22 @@ body {
 }
 
 
+/*----------------------------------------------------------
+ modal
+------------------------------------------------------------*/
+
+.modal-inner {
+  width: 80%;
+  padding: 15px;
+}
+
+.modal-header-btnClose {
+  top: 5px;
+  right: 5px;
+}
+
+
+
 }
 /*--------------------------------------------------------------------
  PC
@@ -564,15 +613,12 @@ body {
  header
 ------------------------------------------------------------*/
 
-.header h1 {
+.header-logo {
   position: absolute;
-  bottom: 80px;
-  right: 30px;
-  width: 100%;
-  font-size: 130px;
-  color: #aaa;
-  text-align: right;
-  font-weight: normal;
+  bottom: 130px;
+  right: 80px;
+  max-width: 658px;
+  max-height: 196px;
 }
 
 
@@ -595,14 +641,8 @@ body {
   bottom: auto;
 }
 
-.globalNav-btnGlobalNav,
-.globalNav-nav h2 {
-  display: none;
-}
-
-.globalNav-nav-list {
-  overflow: hidden;
-}
+.globalNav-header { display: none; }
+.globalNav-nav-list { overflow: hidden; }
 
 .globalNav-nav-list li {
   float: left;
@@ -641,7 +681,7 @@ body {
 }
 
 .section h2 {
-	font-size: 36px;
+  font-size: 36px;
 }
 
 
@@ -731,27 +771,45 @@ body {
 ------------------------------------------------------------*/
 
 .footer {
-	padding: 30px 0;
-	text-align: center;
+  padding: 30px 0;
+  text-align: center;
 }
 
 .btn-pagetop {
-	display: inline-block;
-	position: fixed;
-	right: 10px;
-	bottom: 10px;
-	z-index: 2;
-	width: auto;
-	padding: 20px 18px;
-	background: #ccc;
-	border-radius: 50%;
-	color: #fff !important;
-	text-align: center;
-	text-decoration: none !important;
+  display: inline-block;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  width: auto;
+  padding: 20px 18px;
+  background: #ccc;
+  border-radius: 50%;
+  color: #fff !important;
+  text-align: center;
+  text-decoration: none !important;
   opacity: 0.7;
 }
 
 .footer-copyright { margin-top: 30px; }
+
+
+/*----------------------------------------------------------
+ modal
+------------------------------------------------------------*/
+
+.modal-inner {
+  min-width: 600px;
+  min-height: 300px;
+  padding: 30px;
+}
+
+.modal-header-btnClose {
+  top: 10px;
+  right: 10px;
+}
+
+
 
 
 }
