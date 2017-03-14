@@ -127,6 +127,7 @@
     proto.onResize = function() {
       this.headerView.onResize();
       this.globalNavView.onResize();
+      this.footerView.onResize();
       return this;
     };
     proto.setCustomEvents = function() {
@@ -380,13 +381,19 @@
       return this;
     };
     proto.onScroll = function(scrollTop) {
-        if(!fn.isMediaSp()) {
-          if(scrollTop > $(window).height() *1.5) {
-            this.$btnPagetop.fadeIn();
-          } else {
-            this.$btnPagetop.fadeOut();
-          }
+      if(!fn.isMediaSp()) {
+        if(scrollTop > $(window).height() *1.5) {
+          this.$btnPagetop.fadeIn();
+        } else {
+          this.$btnPagetop.fadeOut();
         }
+      }
+      return this;
+    };
+    proto.onResize = function(scrollTop) {
+      if(fn.isMediaSp()) {
+        this.$btnPagetop.show();
+      }
       return this;
     };
     return constructor;

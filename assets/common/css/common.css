@@ -54,6 +54,9 @@ body, input, select, textarea {
   color: #333;
   font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "ＭＳ Ｐゴシック", "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
 }
+@media screen and (min-width: 641px){
+  body, input, select, textarea { font-size: 100%; }
+}
 
 h1, h2, h3, h4, h5, h6, th, td, small {
   font-size: 100%;
