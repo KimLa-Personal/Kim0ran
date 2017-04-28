@@ -1,7 +1,7 @@
 {
-  "name": "JalanChatbot",
+  "name": "Kim0ran",
   "version": "1.0.0",
-  "description": "JalanChatbot",
+  "description": "Kim0ran",
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
@@ -40,11 +40,6 @@
     "jquery": "^1.11.3",
     "jquery-mockjax": "^2.0.1",
     "jshint": "^2.8.0",
-    "karma": "^0.12.36",
-    "karma-coverage": "~0.2.6",
-    "karma-mocha": "^0.2.0",
-    "karma-mocha-reporter": "~0.3.1",
-    "karma-phantomjs-launcher": "^0.2.0",
     "lodash": "^3.9.3",
     "merge-stream": "^0.1.8",
     "mocha": "^2.2.5",
