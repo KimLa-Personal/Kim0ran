@@ -1,3 +1,38 @@
 /*----------------------------------------------------------
  footer
 ------------------------------------------------------------*/
+
+.footer
+  margin-top: 100px
+  &__btn
+    &--pagetop
+      display: block
+      position: relative
+      padding: 15px 0
+      border-top: 1px solid #eee
+      border-bottom: 1px solid #eee
+      text-indent: -9999px
+      &:after
+        content: ""
+        display: block
+        position: absolute
+        top: 20px
+        left: 50%
+        width: 15px
+        height: 15px
+        margin-left: -10px
+        border-top: 3px solid #aaa
+        border-left: 3px solid #aaa
+        transform: rotate(45deg)
+  &__list
+    &--sns
+      margin-top: 30px
+      text-align: center
+      li
+        display: inline-block
+        margin: 0 10px
+        border-radius: 50%
+  &__copyright
+    innerPadding-sp(30px, 30px)
+    color: #777
+    text-align: center

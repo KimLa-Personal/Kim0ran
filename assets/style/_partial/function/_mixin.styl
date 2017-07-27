@@ -1,3 +1,16 @@
 /*----------------------------------------------------------
  mixin
 ------------------------------------------------------------*/
+
+// スマホの左右のpadding
+innerPadding-sp(top, bottom)
+  padding: top 10px bottom
+
+
+icon(width, height, imageFileName)
+  display: inline-block
+  width: width
+  height: height
+  background: url($image-path + imageFileName) no-repeat
+  background-size: auto height
+  text-indent: -9999px
