@@ -1,5 +1,36 @@
 /*----------------------------------------------------------
- Base
+ fonts
+------------------------------------------------------------*/
+
+/* English */
+@font-face
+  font-family: "Brandon"
+  font-weight: normal
+  src: url("/common/fonts/Brandon_light.woff") format("woff"),
+    url("/common/fonts/Brandon_light.ttf") format("truetype")
+@font-face
+  font-family: "Brandon"
+  font-weight: bold
+  src: url("/common/fonts/Brandon_med.woff") format("woff"),
+    url("/common/fonts/Brandon_med.ttf") format("truetype");
+
+/* Japanese */
+@font-face
+  font-family: "Noto Sans Japanese"
+  font-weight: normal
+  src: url("/common/fonts/NotoSansJP-Light.woff2") format("woff2"),
+    url("/common/fonts/NotoSansJP-Light.woff") format("woff"),
+    url("/common/fonts/NotoSansJP-Light.otf") format("opentype")
+@font-face
+  font-family: "Noto Sans Japanese"
+  font-weight: bold
+  src: url("/common/fonts/NotoSansJP-Regular.woff2") format("woff2"),
+      url("/common/fonts/NotoSansJP-Regular.woff") format("woff"),
+      url("/common/fonts/NotoSansJP-Regular.otf") format("opentype")
+
+
+/*----------------------------------------------------------
+ base
 ------------------------------------------------------------*/
 
 html
@@ -27,12 +58,18 @@ input, select, textarea
  Anchers
 ------------------------------------------------------------*/
 
-a:link,
-a:visited
-  color: $color_text_link
-  text-decoration: underline
-
-a:active,
-a:hover
-  color: $color_text_link_hover
+a
   text-decoration: none
+
+@media $mq-mobile
+  a:link,
+  a:visited
+    color: $color_text_link
+    text-decoration: underline
+
+  a:active,
+  a:hover
+    color: $color_text_link_hover
+    text-decoration: none
+
+
